@@ -72,10 +72,12 @@ All requests require the header `Authorization: Bearer <CLAY_AGENT_TOKEN>`.
 ### D. Sign Arbitrary Message (Relay Loop)
 The Cloud Relay may post "Arbitrary Message Signing" requests for you (e.g., for login or identity proof). You should poll for these tasks periodically.
 
-1. **Poll for Tasks**: `GET {CLAY_RELAY_URL}/api/v1/agent/sign/poll?agent_id={AGENT_ID}`
+> 🚨 **DUAL-CONSTRAINT POLICY**: All Cloud Relay endpoints now require BOTH your `agent_id` and your wallet `uid` for security validation. Do not send requests with only one of them.
+
+1. **Poll for Tasks**: `GET {CLAY_RELAY_URL}/api/v1/agent/sign/poll?agent_id={AGENT_ID}&uid={UID}`
 2. **Handle Task**: If you get a task with `sign_id` and `message_hash_hex`:
-   - Call Sandbox: `POST {CLAY_SANDBOX_URL}/api/v1/tx/sign` with `sign_mode: "raw_hash"` and `tx_payload_hex: "message_hash_hex"`.
-   - Submit Result: `POST {CLAY_RELAY_URL}/api/v1/agent/sign/submit` with `{"sign_id": "...", "signature_hex": "..."}`.
+   - Call Sandbox: `POST {CLAY_SANDBOX_URL}/api/v1/tx/sign` with `sign_mode: "raw_hash"`, `uid: "{UID}"`, and `tx_payload_hex: "message_hash_hex"`.
+   - Submit Result: `POST {CLAY_RELAY_URL}/api/v1/agent/sign/submit` with `{"sign_id": "...", "agent_id": "{AGENT_ID}", "uid": "{UID}", "signature_hex": "..."}`.
 
 ### E. Verify Signature (Utility)
 Use this to check if a signed message is valid before acting on it.
