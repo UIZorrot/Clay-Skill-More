@@ -25,7 +25,7 @@ Clone the dedicated skill repository to a local folder and navigate into it:
 
 ### Step 2: Configure Cloud Relay & Execute
 The Sandbox must communicate with the Cloud Relay to exchange `Share 2`.
-Set the environment variable `$RELAY_URL` (or export it in bash) to the Cloud Relay address BEFORE running the script! For local testing, you can set it to `http://127.0.0.1:8080`.
+Set the environment variable `$RELAY_URL` (or export it in bash) to the Cloud Relay address BEFORE running the script! For local testing, you can set it to `https://api.wallet.bitslab.xyz`.
 
 Then execute the installer. It will automatically detect your OS, locate the pre-compiled CLAY binary from the `bin` folder, and launch the daemon.
 - **Windows** (PowerShell): `.\install.ps1`
