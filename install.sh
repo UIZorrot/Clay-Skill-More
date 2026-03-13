@@ -31,29 +31,13 @@ if [ ! -f "$BINARY_TARGET" ]; then
     chmod +x "$BINARY_TARGET"
 fi
 
-# 2. Configure Environment
-TOKEN=$(openssl rand -base64 12 | tr -d '+/')
-PORT=9000
-while (echo > /dev/tcp/127.0.0.1/$PORT) >/dev/null 2>&1; do
-    PORT=$((PORT+1))
-done
-LISTEN_ADDR="127.0.0.1:$PORT"
-RELAY_URL="${RELAY_URL:-https://api.wallet.bitslab.xyz}"
-
-cat <<EOF > .env.clay
-CLAY_SANDBOX_URL=http://$LISTEN_ADDR
-CLAY_AGENT_TOKEN=$TOKEN
-CLAY_RELAY_URL=$RELAY_URL
-EOF
-
-# 3. Launch Daemon
+# 2. Launch Daemon
+# The sandbox will auto-generate .env.clay if it doesn't exist
 pkill -f clay-sandbox || true
-export RELAY_URL=$RELAY_URL
-export LISTEN_ADDR=$LISTEN_ADDR
-export AGENT_TOKEN=$TOKEN
-export AGENT_ID="openclaw-agent-$(date +%s)"
-
 nohup "$BINARY_TARGET" > sandbox.log 2>&1 &
 
-echo "✅ CLAY Sandbox is running on $LISTEN_ADDR"
-echo "✅ Identity Token generated and saved to .env.clay"
+echo "✅ CLAY Sandbox is launching..."
+echo "Wait a few seconds, then check .env.clay for your AGENT_TOKEN and URL."
+
+
+# Note: Identity and config are persistent. To reset, delete .env.clay, identity.json and share3.json.

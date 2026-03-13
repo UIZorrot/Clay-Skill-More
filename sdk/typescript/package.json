@@ -1,0 +1,26 @@
+{
+  "name": "@bitslab/clay-sdk",
+  "version": "1.0.0",
+  "description": "Zero-friction standard account adapters for Clay Sandbox",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "ethers": ">=6.0.0",
+    "viem": ">=2.0.0",
+    "@solana/web3.js": ">=1.90.0",
+    "@mysten/sui": ">=1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ethers": "^6.0.0",
+    "viem": "^2.0.0",
+    "@solana/web3.js": "^1.90.0",
+    "@mysten/sui": "^1.0.0"
+  }
+}

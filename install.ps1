@@ -17,39 +17,13 @@ if (!(Test-Path $BinaryTarget)) {
     }
 }
 
-# 2. Configure Environment
-$EnvFile = ".env.clay"
-$Token = [System.Convert]::ToBase64String((1..18 | ForEach-Object { [byte](Get-Random -Minimum 0 -Maximum 255) })) -replace "[+\/]", ""
-$BasePort = 9000
-$Port = $BasePort
-while ($true) {
-    if (-not (Get-NetTCPConnection -LocalPort $Port -ErrorAction SilentlyContinue)) {
-        break
-    }
-    $Port++
-}
-$ListenAddr = "127.0.0.1:$Port"
-
-$RelayUrl = $env:RELAY_URL
-if ([string]::IsNullOrWhiteSpace($RelayUrl)) {
-    $RelayUrl = "https://api.wallet.bitslab.xyz"
-}
-
-$EnvContent = @"
-CLAY_SANDBOX_URL=http://$ListenAddr
-CLAY_AGENT_TOKEN=$Token
-CLAY_RELAY_URL=$RelayUrl
-"@
-Set-Content -Path $EnvFile -Value $EnvContent -Encoding UTF8
-
-# 3. Launch Daemon
+# 2. Launch Daemon
+# The sandbox will auto-generate .env.clay if it doesn't exist
 Stop-Process -Name "clay-sandbox" -ErrorAction SilentlyContinue
-Start-Process -FilePath $BinaryTarget -WindowStyle Hidden -Environment @{
-    "RELAY_URL"   = $RelayUrl
-    "LISTEN_ADDR" = $ListenAddr
-    "AGENT_TOKEN" = $Token
-    "AGENT_ID"    = "openclaw-agent-$(Get-Random)"
-}
+Start-Process -FilePath $BinaryTarget -WindowStyle Hidden
 
-Write-Host "✅ CLAY Sandbox is running on $ListenAddr"
-Write-Host "✅ Identity Token generated and saved to $EnvFile"
+Write-Host "✅ CLAY Sandbox is launching..."
+Write-Host "Wait a few seconds, then check .env.clay for your AGENT_TOKEN and URL."
+
+
+# Note: Identity and config are persistent. To reset, delete .env.clay, identity.json and share3.json.
